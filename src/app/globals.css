@@ -1,0 +1,225 @@
+@import "tailwindcss";
+
+/* ==========================================================================
+   Design tokens — Placement Console, Professional White + Blue SaaS
+   Ported from the reference FLT (Flight & Visa Management) module's visual
+   system. Token NAMES are kept stable where the rest of the app already
+   references them (ink/paper/card/brand/brand-dark/teal/amber/rose/slate/
+   line) so existing component classNames keep working — only the VALUES
+   changed, plus new tokens for the navy sidebar, status tints and motion.
+   Never hard-code a hex value in a component; reference these tokens.
+   ========================================================================== */
+:root {
+  --color-ink: #111827; /* text-primary */
+  --color-paper: #f7f9fc; /* page background */
+  --color-card: #ffffff; /* surface */
+  --color-brand: #087cf0; /* primary blue */
+  --color-brand-dark: #0668cc; /* primary hover/active */
+  --color-teal: #0891b2; /* secondary accent (cyan) */
+  --color-amber: #ff7600; /* warning */
+  --color-rose: #e11d48; /* danger */
+  --color-slate: #7d8799; /* text-secondary */
+  --color-line: #e8edf4; /* border */
+
+  --color-navy: #07122f; /* sidebar background */
+  --color-light-blue: #eaf4ff; /* primary tint */
+  --color-sidebar-text: #b9c3d5;
+  --color-sidebar-muted: #66738c;
+  --color-sidebar-active: #087cf0;
+
+  --color-success: #08c85a;
+  --color-success-bg: #e7faf0;
+  --color-warning-bg: #fff3e8;
+  --color-danger-bg: #fdecef;
+  --color-info: #087cf0;
+  --color-info-bg: #eaf4ff;
+  --color-accent-purple: #9744ed;
+  --color-accent-purple-bg: #f4ebfe;
+
+  --background: var(--color-paper);
+  --foreground: var(--color-ink);
+
+  /* Self-hosted via @fontsource-variable/inter (imported in app/layout.tsx),
+     not next/font/google — avoids an external font fetch at build time,
+     which some server environments restrict, and is faster on slow
+     networks. One typeface for both display and body text, carried by
+     weight rather than a second family. */
+  --font-inter: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+
+  --shadow-card: 0 1px 2px 0 rgb(15 23 42 / 0.04), 0 1px 3px 0 rgb(15 23 42 / 0.06);
+  --shadow-card-hover: 0 4px 6px -1px rgb(15 23 42 / 0.06), 0 2px 4px -2px rgb(15 23 42 / 0.06);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-ink: var(--color-ink);
+  --color-paper: var(--color-paper);
+  --color-card: var(--color-card);
+  --color-brand: var(--color-brand);
+  --color-brand-dark: var(--color-brand-dark);
+  --color-teal: var(--color-teal);
+  --color-amber: var(--color-amber);
+  --color-rose: var(--color-rose);
+  --color-slate: var(--color-slate);
+  --color-line: var(--color-line);
+  --color-navy: var(--color-navy);
+  --color-light-blue: var(--color-light-blue);
+  --color-sidebar-text: var(--color-sidebar-text);
+  --color-sidebar-muted: var(--color-sidebar-muted);
+  --color-sidebar-active: var(--color-sidebar-active);
+  --color-success: var(--color-success);
+  --color-success-bg: var(--color-success-bg);
+  --color-warning-bg: var(--color-warning-bg);
+  --color-danger-bg: var(--color-danger-bg);
+  --color-info: var(--color-info);
+  --color-info-bg: var(--color-info-bg);
+  --color-accent-purple: var(--color-accent-purple);
+  --color-accent-purple-bg: var(--color-accent-purple-bg);
+  --font-sans: var(--font-inter);
+  --font-display: var(--font-inter);
+  --shadow-card: var(--shadow-card);
+  --shadow-card-hover: var(--shadow-card-hover);
+}
+
+/* Light-only brand — no dark dashboard mode. */
+html {
+  color-scheme: light;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+* {
+  border-color: var(--color-line);
+}
+
+/* Comfortable touch targets everywhere by default. */
+button,
+a,
+input,
+select,
+textarea {
+  touch-action: manipulation;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+::-webkit-scrollbar-thumb {
+  background: #d7e0ec;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.scrollbar-none {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+/* ==========================================================================
+   Motion — small, purposeful entrance animation for cards/lists, a subtle
+   sheen for skeletons, and the existing growBar/hero-aurora treatments
+   recolored for the blue palette. All respect prefers-reduced-motion.
+   ========================================================================== */
+@keyframes growBar {
+  from {
+    width: 0%;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.reveal {
+  animation: fadeInUp 0.5s ease-out both;
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.45s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.animate-stagger {
+  animation-delay: calc(var(--stagger-index, 0) * 60ms);
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+.animate-shimmer {
+  background-size: 200% 100%;
+  animation: shimmer 2.8s ease-in-out infinite;
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.55;
+  }
+}
+.animate-soft-pulse {
+  animation: soft-pulse 2s ease-in-out infinite;
+}
+
+@keyframes auroraDrift {
+  0% {
+    background-position: 0% 50%, 100% 50%;
+  }
+  50% {
+    background-position: 100% 50%, 0% 50%;
+  }
+  100% {
+    background-position: 0% 50%, 100% 50%;
+  }
+}
+
+.hero-aurora {
+  background-size: 200% 200%, 200% 200%;
+  animation: auroraDrift 18s ease-in-out infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .hero-aurora,
+  .animate-fade-in-up,
+  .animate-shimmer,
+  .animate-soft-pulse,
+  .animate-\[growBar_0\.8s_ease-out\] {
+    animation: none !important;
+  }
+}
