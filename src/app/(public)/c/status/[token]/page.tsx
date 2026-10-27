@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 interface StatusResponse {
-  candidate: { id: number; name: string; program: string; stage: string };
+  candidate: { id: number; name: string; program: string; stage: string; job_approved?: boolean };
   status: string;
   status_label: string;
   interview: {
@@ -63,6 +63,16 @@ export default async function StatusPage({
           </a>
         )}
       </div>
+
+      {data.candidate.job_approved && (
+        <a
+          href={`/c/jobs/${token}`}
+          className="mt-4 flex items-center justify-between rounded-2xl border border-line bg-card p-5 shadow-card hover:bg-light-blue"
+        >
+          <span className="text-sm font-semibold text-ink">View job openings</span>
+          <span className="text-sm text-brand-dark">Open</span>
+        </a>
+      )}
 
       {data.placed && (
         <div className="mt-4 rounded-xl border border-brand/30 bg-brand/5 p-5">

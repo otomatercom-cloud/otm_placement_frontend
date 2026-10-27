@@ -2,6 +2,7 @@ import Topbar from "@/components/Topbar";
 import { getCandidates } from "@/lib/queries";
 import { STAGE_LABELS, type CandidateStage } from "@/lib/types";
 import Link from "next/link";
+import { Badge } from "@/components/ui";
 import clsx from "clsx";
 
 export const dynamic = "force-dynamic";
@@ -65,6 +66,7 @@ export default async function CandidatesPage({
                 <th className="px-4 py-3 font-medium">Program</th>
                 <th className="px-4 py-3 font-medium">Stage</th>
                 <th className="px-4 py-3 font-medium">Interview</th>
+                <th className="px-4 py-3 font-medium">Job access</th>
                 <th className="px-4 py-3 font-medium">Registered</th>
               </tr>
             </thead>
@@ -84,6 +86,11 @@ export default async function CandidatesPage({
                     </span>
                   </td>
                   <td className="px-4 py-3 text-slate">{c.interview_progress_status || "—"}</td>
+                  <td className="px-4 py-3">
+                    <Badge tone={c.job_approved ? "success" : "neutral"}>
+                      {c.job_approved ? "Approved" : "Not approved"}
+                    </Badge>
+                  </td>
                   <td className="px-4 py-3 text-slate">
                     {new Date(c.registration_date.replace(" ", "T")).toLocaleDateString("en-IN")}
                   </td>
@@ -91,7 +98,7 @@ export default async function CandidatesPage({
               ))}
               {candidates.length === 0 && (
                 <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-slate">
+                  <td colSpan={6} className="px-4 py-8 text-center text-slate">
                     No candidates match this filter.
                   </td>
                 </tr>

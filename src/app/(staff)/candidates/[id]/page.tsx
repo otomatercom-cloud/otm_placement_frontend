@@ -1,6 +1,7 @@
 import Topbar from "@/components/Topbar";
 import { getCandidateDetail } from "@/lib/queries";
 import { STAGE_LABELS } from "@/lib/types";
+import JobAccessCard from "@/components/JobAccessCard";
 import { notFound } from "next/navigation";
 
 export const dynamic = "force-dynamic";
@@ -103,6 +104,8 @@ export default async function CandidateDetailPage({
             )}
           </div>
 
+          <div className="space-y-6">
+          <JobAccessCard candidateId={candidate.id} approved={!!candidate.job_approved} />
           {/* Placement */}
           <div className="rounded-2xl border border-line bg-card shadow-card p-5">
             <h3 className="mb-4 font-display text-base text-ink">Placement</h3>
@@ -127,6 +130,7 @@ export default async function CandidateDetailPage({
                 </div>
               ))
             )}
+          </div>
           </div>
         </section>
 

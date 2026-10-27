@@ -1,6 +1,13 @@
 import "server-only";
 import { odooCall, readGroup, searchRead } from "./odoo";
-import { PIPELINE_STAGES, type Candidate, type InterviewSlot, type MockInterview } from "./types";
+import {
+  PIPELINE_STAGES,
+  type Candidate,
+  type InterviewSlot,
+  type JobApplication,
+  type JobOpening,
+  type MockInterview,
+} from "./types";
 
 export async function getDashboardStats() {
   const todayStart = new Date();
@@ -67,6 +74,7 @@ const CANDIDATE_LIST_FIELDS = [
   "interview_preference",
   "interview_progress_status",
   "registration_date",
+  "job_approved",
 ];
 
 export async function getCandidates(opts: {
@@ -147,6 +155,7 @@ const CANDIDATE_DETAIL_FIELDS = [
   "placement_record_count",
   "registration_date",
   "erp_check_status",
+  "job_approved",
 ];
 
 export async function getCandidateDetail(id: number) {
@@ -251,4 +260,55 @@ export async function getInterviews(opts: { status?: string; from?: string } = {
     order: "scheduled_start desc",
     limit: 200,
   });
+}
+
+const JOB_FIELDS = [
+  "name",
+  "company_name",
+  "location",
+  "employment_type",
+  "salary_range",
+  "openings",
+  "description",
+  "requirements",
+  "program_ids",
+  "last_date",
+  "apply_link",
+  "state",
+  "published_date",
+  "application_count",
+];
+
+export async function getJobs(state?: string) {
+  const domain: unknown[] = state ? [["state", "=", state]] : [];
+  return searchRead<JobOpening>("otm.placement.job.opening", domain, JOB_FIELDS, {
+    order: "id desc",
+    limit: 200,
+  });
+}
+
+export async function getPrograms() {
+  return searchRead<{ id: number; name: string }>("otm.placement.program", [], ["name"], {
+    order: "name asc",
+  });
+}
+
+export async function getJobDetail(id: number) {
+  const [[job], applications] = await Promise.all([
+    searchRead<JobOpening>("otm.placement.job.opening", [["id", "=", id]], JOB_FIELDS),
+    searchRead<JobApplication>(
+      "otm.placement.job.application",
+      [["job_id", "=", id]],
+      ["candidate_id", "state", "applied_date", "note"],
+      { order: "id desc" }
+    ),
+  ]);
+  const programs = job?.program_ids?.length
+    ? await searchRead<{ id: number; name: string }>(
+        "otm.placement.program",
+        [["id", "in", job.program_ids]],
+        ["name"]
+      )
+    : [];
+  return { job, applications, programs };
 }

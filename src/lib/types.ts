@@ -43,6 +43,7 @@ export interface Candidate {
   interview_progress_status: string;
   registration_date: string;
   access_token?: string;
+  job_approved?: boolean;
   admission_year?: string | false;
   qualification_status?: "partly_qualified" | "fully_qualified" | "not_qualified" | false;
   company_name?: string | false;
@@ -108,3 +109,39 @@ export interface DashboardStats {
   pending_reattempts: number;
   placements_this_month: number;
 }
+
+export type JobState = "draft" | "published" | "closed";
+export type JobApplicationState = "applied" | "shortlisted" | "selected" | "rejected";
+
+export interface JobOpening {
+  id: number;
+  name: string;
+  company_name: string;
+  location: string | false;
+  employment_type: "full_time" | "part_time" | "internship" | "contract";
+  salary_range: string | false;
+  openings: number;
+  description: string | false;
+  requirements: string | false;
+  program_ids: number[];
+  last_date: string | false;
+  apply_link: string | false;
+  state: JobState;
+  published_date: string | false;
+  application_count: number;
+}
+
+export interface JobApplication {
+  id: number;
+  candidate_id: [number, string];
+  state: JobApplicationState;
+  applied_date: string;
+  note: string | false;
+}
+
+export const EMPLOYMENT_TYPE_LABELS: Record<JobOpening["employment_type"], string> = {
+  full_time: "Full Time",
+  part_time: "Part Time",
+  internship: "Internship",
+  contract: "Contract",
+};

@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { verifySessionToken, SESSION_COOKIE_NAME } from "@/lib/session";
 
-const PROTECTED_PREFIXES = ["/dashboard", "/candidates", "/slots", "/interviews"];
-const PROTECTED_API_PREFIXES = ["/api/dashboard", "/api/candidates", "/api/slots", "/api/interviews"];
+const PROTECTED_PREFIXES = ["/dashboard", "/candidates", "/slots", "/interviews", "/jobs"];
+const PROTECTED_API_PREFIXES = ["/api/dashboard", "/api/candidates", "/api/slots", "/api/interviews", "/api/jobs"];
 
 export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
@@ -38,5 +38,7 @@ export const config = {
     "/api/candidates/:path*",
     "/api/slots/:path*",
     "/api/interviews/:path*",
+    "/jobs/:path*",
+    "/api/jobs/:path*",
   ],
 };
